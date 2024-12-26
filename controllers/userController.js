@@ -2,8 +2,9 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const userModel = require("../models/userModel");
 
-// Register User
+
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -20,6 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
+  console.log("Hashed password", hashedPassword);
 
   const user = await User.create({
     username,
@@ -28,34 +30,19 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    // Create JWT token for user
-    const accessToken = jwt.sign(
-      {
-        user: {
-          username: user.username,
-          email: user.email,
-          id: user.id,
-        },
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" }
-    );
-
-    // Send the token in the response
-    return res.status(201).json({
-      accessToken,
-      user: {
-        username: user.username,
-        email: user.email,
-      },
-    });
+    // Respond and stop execution here
+    return res.status(201).json({ _id: user.id, email: user.email });
   } else {
     res.status(400);
     throw new Error("User data is not valid");
   }
 });
 
-// Login User
+
+// ----------------------------------------------------------------------
+//@desc LOGIN a USER
+// @route POST/api/users/login
+// @access public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -66,8 +53,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
+  // Compare the password with the hashed password
   if (user && (await bcrypt.compare(password, user.password))) {
-    // Create JWT token for user
     const accessToken = jwt.sign(
       {
         user: {
@@ -76,36 +63,24 @@ const loginUser = asyncHandler(async (req, res) => {
           id: user.id,
         },
       },
-      process.env.ACCESS_TOKEN_SECRET,
+      process.env.ACCESS_TOKEN_SECERT,
       { expiresIn: "15m" }
     );
-
-    // Respond with access token and user details
-    return res.status(200).json({
-      accessToken,
-      user: {
-        username: user.username,
-        email: user.email,
-      },
-    });
+    // Respond and stop further execution
+    return res.status(200).json({ accessToken });
   } else {
     res.status(401);
     throw new Error("EMAIL OR PASSWORD IS NOT VALID");
   }
 });
 
-// Get Current User Info
+
+//@desc CURRENT USER INFO
+// @route POST/api/users/current
+// @access private
 const currentUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id); // Ensure you’re fetching user by decoded ID
-  if (user) {
-    res.json({
-      username: user.username,
-      email: user.email,
-    });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
-  }
+  res.json(req.user);
 });
+
 
 module.exports = { registerUser, loginUser, currentUser };
