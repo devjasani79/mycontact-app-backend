@@ -3,21 +3,18 @@ const jwt = require("jsonwebtoken");
 
 const validateToken = asyncHandler(async (req, res, next) => {
     let token;
-    let authHeader = req.headers.Authorization || req.headers.authorization;
+    const authHeader = req.headers.authorization || req.headers.Authorization; // Normalize the header access
     if (authHeader && authHeader.startsWith("Bearer")) {
         token = authHeader.split(" ")[1];
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECERT, (err, decoded) => {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
             if (err) {
-                res.status(401);
-                throw new Error("USER NOT VERIFIED");
+                return res.status(401).json({ message: "USER NOT VERIFIED" });
             }
-            req.user = decoded.user; // Fix: Assign to req.user
+            req.user = decoded.user; // Attach decoded user to request object
             next();
         });
-    }
-    if (!token) {
-        res.status(401);
-        throw new Error("USER NOT AUTHORIZED or TOKEN MISSING");
+    } else {
+        return res.status(401).json({ message: "USER NOT AUTHORIZED or TOKEN MISSING" });
     }
 });
 
