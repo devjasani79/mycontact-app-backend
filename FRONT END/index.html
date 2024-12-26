@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body class="bg-gradient-to-r from-blue-500 to-teal-500 min-h-screen flex justify-center items-center">
+
+
+
+    <!-- Authentication Section -->
+    <div id="auth-section" class="w-full sm:w-80 md:w-96 bg-white rounded-lg shadow-lg p-8">
+        <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-gray-700">Register</h2>
+        <form id="auth-form">
+            <div id="register-fields">
+                <label for="register-username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="register-username" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <label for="auth-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="auth-email" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+            <label for="auth-password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="auth-password" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-6 focus:ring-2 focus:ring-blue-500" required>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Submit</button>
+        </form>
+        <p class="text-center text-sm mt-4">
+            <span id="toggle-auth" class="text-blue-500 cursor-pointer">Already have an account? Login</span>
+        </p>
+    </div>
+
+    <!-- Main App Section -->
+    <div id="app-section" class="hidden w-full sm:w-80 md:w-96 lg:w-1/2 xl:w-1/3 bg-white rounded-lg shadow-lg p-8 mt-6 mx-auto">
+        <header class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-700">Contact Manager</h1>
+            <button id="logout-btn" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">Logout</button>
+        </header>
+
+        <!-- Grid layout for larger screens, flex column for smaller -->
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- CRUD Options (Form) -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-4">Manage Contacts</h2>
+               <!-- Show Contacts Button -->
+<button id="show-contacts-btn" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300">
+    Show Contacts
+</button>
+                <form id="contact-form" class="mt-4">
+                    <input type="hidden" id="contact-id">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" id="name" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                    <input type="text" id="phone" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Save Contact</button>
+                </form>
+            </div>
+
+
+            <!-- Contact List -->
+            <div id="contacts-section" class="w-full bg-white shadow-md rounded-lg p-6 mt-6 md:mt-0 overflow-auto" style="max-height: 500px;">
+                <h2 class="text-xl font-bold mb-4">Contacts</h2>
+                <ul id="contacts-list" class="space-y-4">
+                    <!-- Contact list items will go here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+<!-- Update Modal -->
+<div id="update-modal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96">
+        <h2 class="text-xl font-bold mb-4">Update Contact</h2>
+        <form id="update-contact-form">
+            <input type="hidden" id="update-contact-id">
+            <label for="update-name" class="block text-sm font-medium text-gray-700">Name</label>
+            <input type="text" id="update-name" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+
+            <label for="update-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="update-email" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+
+            <label for="update-phone" class="block text-sm font-medium text-gray-700">Phone</label>
+            <input type="text" id="update-phone" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500" required>
+
+            <div class="flex justify-between">
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Update Contact</button>
+                <button type="button" id="close-update-modal" class="w-full bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-500 transition duration-300">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/crud.js"></script>
+    <script src="js/session.js"></script>
+</body>
+
+</html>
